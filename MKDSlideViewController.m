@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         _rightStatusBarStyle = UIStatusBarStyleBlackOpaque;
         _slideSpeed = 0.3f;
         _overlapWidth = 52.0f;
+        _enabled = YES;
     }
     return self;
 }
@@ -170,6 +171,10 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         [_leftViewController.view removeFromSuperview];
         [_leftViewController release];
     }
+    
+    if (!leftViewController)
+        return;
+    
     _leftViewController = [leftViewController retain];
     _leftViewController.slideViewController = self;
     [self addChildViewController:_leftViewController];
@@ -192,6 +197,10 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         [_rightViewController.view removeFromSuperview];
         [_rightViewController release];
     }
+    
+    if (!rightViewController)
+        return;
+    
     _rightViewController = [rightViewController retain];
     _rightViewController.slideViewController = self;
     [self addChildViewController:_rightViewController];
@@ -259,6 +268,9 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 
 - (void)pan:(UIPanGestureRecognizer *)gesture
 {
+    if (!self.enabled)
+        return;
+    
     if( gesture.state == UIGestureRecognizerStateBegan )
     {
         self.previousLocationInView = CGPointZero;
@@ -269,10 +281,11 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     else if( gesture.state == UIGestureRecognizerStateChanged )
     {
         // Decide, which view controller should be revealed
-        if( self.mainPanelView.frame.origin.x <= 0.0f ) // left
+        if( self.mainPanelView.frame.origin.x <= 0.0f ) {   // left
             [self.view sendSubviewToBack:self.leftPanelView];
-        else
+        } else {
             [self.view sendSubviewToBack:self.rightPanelView];
+        }
         
         // Calculate position offset
         CGPoint locationInView = [gesture translationInView:self.view];
@@ -281,6 +294,12 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         // Update view frame
         CGRect newFrame = self.mainPanelView.frame;
         newFrame.origin.x +=deltaX;
+        
+        if (newFrame.origin.x > 0 && !self.leftViewController)
+            return;
+        if (newFrame.origin.x < 0 && !self.rightViewController)
+            return;
+        
         self.mainPanelView.frame = newFrame;
         
         self.previousLocationInView = locationInView;

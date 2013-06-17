@@ -28,6 +28,7 @@
 @property (nonatomic, assign) CGFloat slideSpeed;  // default: 0.3f
 @property (nonatomic, assign) CGFloat overlapWidth;  // default: 52.0f
 
+@property (nonatomic) BOOL enabled;
 
 - (instancetype)initWithMainViewController:(UIViewController *)mainViewController;
 - (void)setMainViewController:(UIViewController *)mainViewController animated:(BOOL)animated;  // calls - (void)showMainViewControllerAnimated: on completion
