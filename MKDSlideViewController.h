@@ -10,7 +10,7 @@
 
 @protocol MKDSlideViewControllerDelegate;
 
-@interface MKDSlideViewController : UIViewController
+@interface MKDSlideViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, assign) id<MKDSlideViewControllerDelegate> delegate;
 
 // Child View Controllers

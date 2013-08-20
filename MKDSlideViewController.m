@@ -262,8 +262,13 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     {
         _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
         _panGestureRecognizer.maximumNumberOfTouches = 1;
+        _panGestureRecognizer.delegate = self;
     }
     return _panGestureRecognizer;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
+    return self.enabled;
 }
 
 - (void)pan:(UIPanGestureRecognizer *)gesture
