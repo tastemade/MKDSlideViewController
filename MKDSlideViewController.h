@@ -28,6 +28,9 @@
 @property (nonatomic, assign) CGFloat slideSpeed;  // default: 0.3f
 @property (nonatomic, assign) CGFloat overlapWidth;  // default: 52.0f
 
+// constraint used to slide the main view
+@property (nonatomic, strong) NSLayoutConstraint* constraintMainViewLeft;
+
 @property (nonatomic) BOOL enabled;
 
 - (instancetype)initWithMainViewController:(UIViewController *)mainViewController;
