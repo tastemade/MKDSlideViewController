@@ -538,7 +538,18 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
             [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.leftViewController];
     }
+}
 
+- (void)showLeftFull {
+    CGSize screenSize = [self getScreenBoundsOrientated];
+    float constant = screenSize.width;
+    
+    [UIView animateWithDuration:self.slideSpeed
+                     animations:^{
+                         _constraintMainViewLeft.constant = constant;
+                         [self.view layoutIfNeeded];
+                     } completion:^(BOOL finished) {
+                     }];
 }
 
 - (void)showRightViewController

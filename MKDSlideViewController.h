@@ -40,12 +40,14 @@
 // Display Handling
 - (void)showLeftViewController;
 - (void)showLeftViewControllerAnimated:(BOOL)animated;
+- (void)showLeftFull;       // hides the main view completely
 
 - (void)showRightViewController;
 - (void)showRightViewControllerAnimated:(BOOL)animated;
 
 - (void)showMainViewController;
 - (void)showMainViewControllerAnimated:(BOOL)animated;
+
 
 @end
 
