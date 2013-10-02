@@ -72,48 +72,47 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     [super dealloc];
 }
 
-// Create the view hierarchy
-- (void)loadView {
-    UIView * view = [UIView new];
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    view.backgroundColor = [UIColor blackColor];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor blackColor];
     
     // Setup Panels
     _leftPanelView = [UIView new];
     _leftPanelView.translatesAutoresizingMaskIntoConstraints = NO;
     _leftPanelView.backgroundColor = [UIColor blackColor];
-    [view addSubview:_leftPanelView];
+    [self.view addSubview:_leftPanelView];
     
     _rightPanelView = [UIView new];
     _rightPanelView.translatesAutoresizingMaskIntoConstraints = NO;
     _rightPanelView.backgroundColor = [UIColor blackColor];
-    [view addSubview:_rightPanelView];
+    [self.view addSubview:_rightPanelView];
     
     _mainPanelView = [UIView new];
     _mainPanelView.translatesAutoresizingMaskIntoConstraints = NO;
     _mainPanelView.backgroundColor = [UIColor blackColor];
-    [view addSubview:_mainPanelView];
+    [self.view addSubview:_mainPanelView];
     [_mainPanelView addGestureRecognizer:self.panGestureRecognizer];
     
     CGSize screenSize = [self getScreenBoundsOrientated];
-
+    
     NSDictionary* viewsDictionary = NSDictionaryOfVariableBindings(_leftPanelView, _rightPanelView, _mainPanelView);
     
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|[_leftPanelView(==%d)]|", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_leftPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
-
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|[_rightPanelView(==%d)]|", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_rightPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
-
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[_mainPanelView(==%d)]", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
-    [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_mainPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|[_leftPanelView(==%d)]|", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_leftPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|[_rightPanelView(==%d)]|", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_rightPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[_mainPanelView(==%d)]", (int) screenSize.width] options:0 metrics:nil views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[_mainPanelView(==%d)]|", (int) screenSize.height] options:0 metrics:nil views:viewsDictionary]];
     
     // create constraint for the left edge of the main view
     // we will animate the constant of this constraint for sliding the main view
-    _constraintMainViewLeft = [NSLayoutConstraint constraintWithItem:_mainPanelView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
-
-    [view addConstraint:_constraintMainViewLeft];
-
+    _constraintMainViewLeft = [NSLayoutConstraint constraintWithItem:_mainPanelView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f];
+    
+    [self.view addConstraint:_constraintMainViewLeft];
+    
     // Setup main layer shadow
     CALayer * layer = _mainPanelView.layer;
     layer.masksToBounds = NO;
@@ -137,9 +136,6 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     {
         [self addRightView];
     }
-    
-    self.view = view;
-    [view release];
 }
 
 - (void)didReceiveMemoryWarning
