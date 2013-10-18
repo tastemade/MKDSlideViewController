@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     [self.view addSubview:_mainPanelView];
     [_mainPanelView addGestureRecognizer:self.panGestureRecognizer];
     
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     
     NSDictionary* viewsDictionary = NSDictionaryOfVariableBindings(_leftPanelView, _rightPanelView, _mainPanelView);
     
@@ -177,7 +177,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         // Add as subview, if slide view controller view is loaded.
         [self.mainPanelView addSubview:self.mainViewController.view];
 
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     
     UIView* mv = self.mainViewController.view;
     mv.translatesAutoresizingMaskIntoConstraints = NO;
@@ -218,7 +218,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         // Add as subview, if slide view controller view is loaded.
         [self.leftPanelView addSubview:self.leftViewController.view];
 
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     
     UIView* lv = self.leftViewController.view;
     lv.translatesAutoresizingMaskIntoConstraints = NO;
@@ -259,7 +259,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         // Add as subview, if slide view controller view is loaded.
         [self.rightPanelView addSubview:self.rightViewController.view];
 
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     
     UIView* rv = self.rightViewController.view;
     rv.translatesAutoresizingMaskIntoConstraints = NO;
@@ -278,7 +278,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         return;
     }
     
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     float constant = screenSize.width + self.overlapWidth;
     
     if( self.mainViewController != nil )
@@ -296,27 +296,22 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
                          }
     }
 
-- (CGSize)getScreenBoundsOrientated {
-    CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    UIInterfaceOrientation orient = [UIApplication sharedApplication].statusBarOrientation;
-    if (UIInterfaceOrientationIsLandscape(orient)) {
-        float w = screenSize.width;
-        screenSize.width = screenSize.height;
-        screenSize.height = w;
-    }
-    return screenSize;
+- (CGSize)getScreenBounds {
+    return [UIScreen mainScreen].bounds.size;
 }
 
 #pragma mark - Rotation Handling
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotate {
+    return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
-{
+- (NSUInteger) supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
 }
 
 #pragma mark - Panning
@@ -509,7 +504,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     
     [self.view sendSubviewToBack:self.rightPanelView];
     
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     float constant = screenSize.width - self.overlapWidth;
 
     if( animated )
@@ -537,7 +532,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 }
 
 - (void)showLeftFull {
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     float constant = screenSize.width;
     
     [UIView animateWithDuration:self.slideSpeed
@@ -565,7 +560,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
     
     [self.view sendSubviewToBack:self.leftPanelView];
     
-    CGSize screenSize = [self getScreenBoundsOrientated];
+    CGSize screenSize = [self getScreenBounds];
     float constant = -screenSize.width + self.overlapWidth;
 
     if( animated )
