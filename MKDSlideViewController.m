@@ -492,17 +492,20 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 
     if( animated )
     {
-        [UIView animateWithDuration:self.slideSpeed
-                         animations:^{
-                             _constraintMainViewLeft.constant = constant;
-                             [self.view layoutIfNeeded];
-                             
-        } completion:^(BOOL finished) {
-            [self addTapViewOverlay];
-            [self.leftViewController viewDidAppear:animated];
-            if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
-                [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.leftViewController];
-        }];
+        // dispatch_async is to allow the view presentation to "settle" before animating, otherwise the view itself animates / slides vertically as the whole thing slides horizontally
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:self.slideSpeed
+                             animations:^{
+                                 _constraintMainViewLeft.constant = constant;
+                                 [self.view layoutIfNeeded];
+                                 
+            } completion:^(BOOL finished) {
+                [self addTapViewOverlay];
+                [self.leftViewController viewDidAppear:animated];
+                if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
+                    [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.leftViewController];
+            }];
+        });
     }
     else
     {
@@ -549,17 +552,20 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 
     if( animated )
     {
-        [UIView animateWithDuration:self.slideSpeed
-                         animations:^{
-                             _constraintMainViewLeft.constant = constant;
-                             [self.view layoutIfNeeded];
-                             
-        } completion:^(BOOL finished) {
-            [self addTapViewOverlay];
-            [self.rightViewController viewDidAppear:animated];
-            if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
-                [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.rightViewController];
-        }];
+        // dispatch_async is to allow the view presentation to "settle" before animating, otherwise the view itself animates / slides vertically as the whole thing slides horizontally
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:self.slideSpeed
+                             animations:^{
+                                 _constraintMainViewLeft.constant = constant;
+                                 [self.view layoutIfNeeded];
+                                 
+            } completion:^(BOOL finished) {
+                [self addTapViewOverlay];
+                [self.rightViewController viewDidAppear:animated];
+                if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
+                    [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.rightViewController];
+            }];
+        });
     }
     else
     {
@@ -610,20 +616,23 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
         
         if( animated )
         {
-            [UIView animateWithDuration:self.slideSpeed
-                             animations:^{
-                                 _constraintMainViewLeft.constant = 0.0f;
-                                 [self.view layoutIfNeeded];
-            } completion:^(BOOL finished) {
-                if (viewEvents) {
-                    [self.mainViewController viewDidAppear:animated];
-                }
-               
-                [disappearingViewController viewDidDisappear:animated];
-                [self removeTapViewOverlay];
-                if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
-                    [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.mainViewController];
-            }];
+            // dispatch_async is to allow the view presentation to "settle" before animating, otherwise the view itself animates / slides vertically as the whole thing slides horizontally
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIView animateWithDuration:self.slideSpeed
+                                 animations:^{
+                                     _constraintMainViewLeft.constant = 0.0f;
+                                     [self.view layoutIfNeeded];
+                } completion:^(BOOL finished) {
+                    if (viewEvents) {
+                        [self.mainViewController viewDidAppear:animated];
+                    }
+                   
+                    [disappearingViewController viewDidDisappear:animated];
+                    [self removeTapViewOverlay];
+                    if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
+                        [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.mainViewController];
+                }];
+            });
         }
         else
         {
