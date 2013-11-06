@@ -255,11 +255,9 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 
 - (void)setMainViewController:(UIViewController *)mainViewController animated:(BOOL)animated
 {
-    [self.mainViewController viewWillDisappear:animated];
     if(!animated)
     {
         self.mainViewController = mainViewController;
-        [self.mainViewController viewDidDisappear:animated];
         [self showMainViewControllerAnimated:animated viewEvents:YES];
         return;
     }
@@ -592,19 +590,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
 
 - (void)showMainViewControllerAnimated:(BOOL)animated viewEvents:(BOOL)viewEvents
 {
-    UIViewController *disappearingViewController = nil;
-    if (self.slidePosition == MKDSlideViewControllerPositionLeft) {
-        disappearingViewController = self.leftViewController;
-    }else if (self.slidePosition == MKDSlideViewControllerPositionRight) {
-        disappearingViewController = self.rightViewController;
-    }
     self.slidePosition = MKDSlideViewControllerPositionCenter;
-    
-    [disappearingViewController viewWillDisappear:animated];
-    
-    if (viewEvents) {
-        [self.mainViewController viewWillAppear:animated];
-    }
     
     if( [self isHandlingStatusBarStyleChanges] )
         [[UIApplication sharedApplication] setStatusBarStyle:self.mainStatusBarStyle animated:YES];
@@ -623,11 +609,7 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
                                      _constraintMainViewLeft.constant = 0.0f;
                                      [self.view layoutIfNeeded];
                 } completion:^(BOOL finished) {
-                    if (viewEvents) {
-                        [self.mainViewController viewDidAppear:animated];
-                    }
-                   
-                    [disappearingViewController viewDidDisappear:animated];
+    
                     [self removeTapViewOverlay];
                     if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
                         [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.mainViewController];
@@ -639,23 +621,13 @@ typedef NS_ENUM(NSInteger, MKDSlideViewControllerPositionType) {
             
             _constraintMainViewLeft.constant = 0.0f;
             [self.view layoutIfNeeded];
-            
-            if (viewEvents) {
-                [self.mainViewController viewDidAppear:animated];
-            }
-            
-            [disappearingViewController viewDidDisappear:animated];
+        
             [self removeTapViewOverlay];
             
             if( [self.delegate respondsToSelector:@selector(slideViewController:didSlideToViewController:)] )
                 [self.delegate performSelector:@selector(slideViewController:didSlideToViewController:) withObject:self withObject:self.mainViewController];
         }
         
-    }else{
-        if (viewEvents) {
-            [self.mainViewController viewDidAppear:animated];
-        }
-        [disappearingViewController viewDidDisappear:animated];
     }
 }
 
